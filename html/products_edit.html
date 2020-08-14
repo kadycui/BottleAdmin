@@ -1,0 +1,293 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <title>产品编辑</title>
+</head>
+<body>
+<div class="page-container">
+    <form class="form form-horizontal" id="form1">
+        <div id="tab-category" class="HuiTab">
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">产品名称：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">产品编码：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="code" name="code">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">产品分类：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="select-box w-100"><select class="select" id="product_class" size="1"><option
+                            value="" selected>请选择</option></select></span>
+                    <input type="hidden" id="product_class_id" value="">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">产品规格：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="standard" name="standard">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">保持期：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="quality_guarantee_period"
+                           name="quality_guarantee_period">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">产地：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="place_of_origin"
+                           name="place_of_origin">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">封面图片：<span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="upfile" name="upfile" type="file" style="height: auto;"/>
+                    <img id="front_cover_img" src="" height="25" width="100" hidden="hidden"/>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">是否启用：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="is_enable_1" name="is_enable" value="0">否
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="is_enable_2" name="is_enable" value="1">是
+                    </div>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">产品描述：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <script id="editor" type="text/plain" style="width:100%;height:400px;"></script>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-3">
+                <input type="hidden" id="id" value="">
+                <button onClick="save();" class="btn btn-primary radius" type="button">
+                    &nbsp;&nbsp;提交&nbsp;&nbsp;
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="/lib/common.js"></script>
+<SCRIPT type="text/javascript">
+    $(function () {
+        //这里需要添加下面这段代码，将服务器端加载参数改为本地加载路径，不然编辑器会使用不了
+        UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+        UE.Editor.prototype.getActionUrl = function (action) {
+            if (action == 'config') {
+                return '/lib/ueditor/1.4.3/python/config.json';
+//            } else if (action == 'catchimage') {
+//                return '/api/files/catchimage/';
+            } else {
+                return this._bkGetActionUrl.call(this, action);
+            }
+        };
+        var ue = UE.getEditor('editor');
+
+        var id = getQueryString('id');
+        $('#id').val(id);
+
+        //从服务器端读取的内容要写入ueditor编辑器中，需要使用ue.ready来设置，等编辑器加载完成后再进行写操作，不然会暴空异常
+        ue.ready(function () {
+            if (id) {
+                $.ajax({
+                    url: "/api/product/" + id + "/",
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (checkLogin(data, true)) {
+                            $("#name").val(data.data.name);
+                            $("#code").val(data.data.code);
+                            $("#standard").val(data.data.standard);
+                            $("#quality_guarantee_period").val(data.data.quality_guarantee_period);
+                            $("#place_of_origin").val(data.data.place_of_origin);
+                            if (data.data.is_enable == 1) {
+                                $("#is_enable_2").attr('checked', 'checked');
+                            }
+                            else {
+                                $("#is_enable_1").attr('checked', 'checked');
+                            }
+                            $("#front_cover_img").attr('src', data.data.front_cover_img);
+                            $("#front_cover_img").show();
+                            var ue = UE.getEditor('editor');
+                            ue.setContent(data.data.content);
+
+                            $('#product_class_id').val(data.data.product_class_id);
+                            $('#product_class').val(data.data.product_class_id);
+                        }
+                    }
+                });
+            }
+        });
+        // 设置下拉列表
+        $.ajax({
+            url: "/api/product_class/",
+            xhrFields: {withCredentials: true},
+            type: "GET",
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, true)) {
+                    var node = document.getElementById("product_class");
+                    for (var i = 0; i < data.rows.length; i++) {
+                        node.options.add(new Option(data.rows[i].name, data.rows[i].id));
+                    }
+                    $('#product_class').val($('#product_class_id').val());
+                }
+            }
+        });
+    });
+
+    //上传文件
+    function save() {
+        //上传图片
+        if ($("#upfile").val() != '') {
+            var data = new FormData();
+            data.append('upfile', $('#upfile')[0].files[0]);
+            $.ajax({
+                type: "POST",
+                url: "/api/files/",
+                data: data,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data && data.state == "SUCCESS") {
+                        $("#front_cover_img").src = data.url;
+                        $("#front_cover_img").hidden = '';
+                        $("#upfile").val('');
+                        submit(data.url);
+                    } else {
+                        layer.msg("上传失败", {icon: 1, time: 3000});
+                        layer_close();
+                    }
+                },
+                error: function (data) {
+                    layer.msg("上传失败", {icon: 1, time: 3000});
+                    layer_close();
+                }
+            });
+        } else {
+            submit('');
+        }
+    }
+    function submit(front_cover_img) {
+        //提交表单
+        var ue = UE.getEditor('editor');
+        content = ue.getContent();
+        var is_enable = 0;
+        if ($("input[type='radio'][name='is_enable']:checked").val() == '1') {
+            is_enable = 1;
+        }
+        data = {
+            'content': encodeURI(content),
+            'name': encodeURI($("#name").val()),
+            'code': $("#code").val(),
+            'product_class_id': $('#product_class').val(),
+            'standard': encodeURI($("#standard").val()),
+            'quality_guarantee_period': encodeURI($("#quality_guarantee_period").val()),
+            'place_of_origin': encodeURI($("#place_of_origin").val()),
+            'is_enable': is_enable
+        };
+        if (front_cover_img != '') {
+            data['front_cover_img'] = front_cover_img;
+        } else {
+            data['front_cover_img'] = $("#front_cover_img")[0].src;
+        }
+        var id = $('#id').val();
+        if (id) {
+            url = "/api/product/" + id + "/";
+            data['_method'] = 'put';
+        }
+        else {
+            url = "/api/product/";
+        }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, true)) {
+                    layer.msg(data.msg, {icon: 1, time: 3000});
+                    setTimeout(function () {
+                        parent.jQuery("#list").trigger("reloadGrid");
+                        layer_close();
+                    }, 1000);
+                }
+            },
+            error: function (data) {
+                layer.msg("提交失败", {icon: 1, time: 3000});
+            }
+        });
+    }
+    //-->
+</SCRIPT>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>公司介绍管理</title>
+    <meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+    <meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+    <form class="form form-horizontal" id="form1">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="title" name="title"
+                       disabled="disabled">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">首页图片：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <input id="upfile" name="upfile" type="file" style="height: auto;"/>
+                    <img id="front_cover_img" src="" height="25" width="100" hidden="hidden"/>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文章内容：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <script id="editor" type="text/plain" style="width:100%;height:400px;"></script>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button onClick="save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">
+                    &#xe632;</i> 保存
+                </button>
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="/lib/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //这里需要添加下面这段代码，将服务器端加载参数改为本地加载路径，不然编辑器会使用不了
+        UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+        UE.Editor.prototype.getActionUrl = function (action) {
+            if (action == 'config') {
+                return '/lib/ueditor/1.4.3/python/config.json';
+//            } else if (action == 'catchimage') {
+//                return '/api/files/catchimage/';
+            } else {
+                return this._bkGetActionUrl.call(this, action);
+            }
+        };
+        var ue = UE.getEditor('editor');
+
+        //从服务器端读取的内容要写入ueditor编辑器中，需要使用ue.ready来设置，等编辑器加载完成后再进行写操作，不然会暴空异常
+        ue.ready(function () {
+            //读取服务器记录
+            $.ajax({
+                url: "/api/about/",
+                type: "GET",
+                dataType: 'json',
+                success: function (data) {
+                    if (checkLogin(data, true)) {
+                        $("#title").val(data.data.title);
+                        $("#front_cover_img").attr('src', data.data.front_cover_img);
+                        $("#front_cover_img").show();
+                        var ue = UE.getEditor('editor');
+                        ue.setContent(data.data.content);
+                    }
+                }
+            });
+        });
+    });
+
+    //上传文件
+    function save() {
+        //上传图片
+        if ($("#upfile").val() != '') {
+            var data = new FormData();
+            data.append('upfile', $('#upfile')[0].files[0]);
+            $.ajax({
+                type: "POST",
+                url: "/api/files/",
+                data: data,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data && data.state == "SUCCESS") {
+                        $("#front_cover_img").src = data.url;
+                        $("#front_cover_img").hidden = '';
+                        $("#upfile").val('');
+                        submit(data.url);
+                    } else {
+                        layer.msg("上传失败", {icon: 1, time: 3000});
+                        layer_close();
+                    }
+                },
+                error: function (data) {
+                    layer.msg("上传失败", {icon: 1, time: 3000});
+                    layer_close();
+                }
+            });
+        } else {
+            submit('');
+        }
+    }
+    //提交表单内容
+    function submit(front_cover_img) {
+        //提交表单
+        var ue = UE.getEditor('editor');
+        content = ue.getContent();
+        data = {
+            '_method': 'put',
+            'content': encodeURI(content)
+        };
+        if (front_cover_img != '') {
+            data['front_cover_img'] = front_cover_img;
+        }else{
+            data['front_cover_img'] = $("#front_cover_img")[0].src;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/api/about/",
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, true)) {
+                    layer.msg(data.msg, {icon: 1, time: 3000});
+                    layer_close();
+                }
+            }
+        });
+    }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

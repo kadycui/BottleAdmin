@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!-- jqGrid组件基础样式包-必要 -->
+    <link rel="stylesheet" href="lib/jqgrid/css/ui.jqgrid.css"/>
+    <!-- jqGrid主题包-非必要 -->
+    <!-- 在jqgrid/css/css这个目录下还有其他的主题包，可以尝试更换看效果 -->
+    <link rel="stylesheet" href="lib/jqgrid/css/css/redmond/jquery-ui-1.8.16.custom.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>职位管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span>
+    系统管理
+    <span class="c-gray en">&gt;</span>
+    职位管理
+</nav>
+<div class="page-container">
+    <div>
+        <table class="table table-border table-bordered">
+            <tr>
+                <td class="va-t" style="width: 160px;">
+                    <!-- jqGrid table list4 -->
+                    <table id="list"></table>
+                </td>
+                <td class="va-t">
+                    <div class="cl pd-5 mt-5">
+                        <p class="cl c-white f-18">
+                            <span class="pd-5"
+                                  style="background-color:#06C"><strong> &nbsp;后台权限管理说明&nbsp; </strong></span>
+                        </p>
+                        <div class="f-14 cl">
+                            <div class="indent">
+                                职位权限管理，是将权限组和管理员、菜单、页面控件等权限捆绑到一块进行综合管理，
+                                在用户操作时根据设定的权限进行判断，无权限的菜单、页面或按键则直接返回不能操作，
+                                以保护系统的安全。在设置菜单、页面访问操作权限时，要基于这样一个原则，使用户操作界面里显示最少的菜单项，
+                                用户不应该有的或可有可没有的项就不要给用户开这个权限，让界面简单、明了、易用。
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border-bottom:solid 1px #5a98de;"></div>
+                    <div class="cl pd-5 mt-5 mb-10">
+                        <span class="l">
+                            <a class="btn btn-primary radius" onclick="add('添加','positions_edit.html', 500, 500)"
+                               href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
+                            <a class="btn btn-secondary radius"
+                               onclick="edit('编辑','positions_edit.html', 500, 500)"
+                               href="javascript:;"><i class="Hui-iconfont">&#xe6df;</i> 编辑</a>
+                            <a href="javascript:;" onclick="del()" class="btn btn-danger radius"><i
+                                    class="Hui-iconfont">&#xe6e2;</i> 删除</a>
+                        </span>
+                    </div>
+                    <table id="list_positions"></table>
+                    <div id="pager_positions"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/third-party/video-js/video.dev.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<!-- jqGrid插件包-必要 -->
+<script type="text/javascript" src="lib/jqgrid/js/jquery.jqGrid.src.js"></script>
+<!-- jqGrid插件的多语言包-非必要 -->
+<!-- 在jqgrid/js/i18n下还有其他的多语言包，可以尝试更换看效果 -->
+<script type="text/javascript" src="lib/jqgrid/js/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="/lib/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //创建jqGrid组件
+        $("#list").jqGrid({
+            url: "/api/system/department/",//组件创建完成之后请求数据的url
+            mtype: "get",//向后台请求数据的ajax的类型。可选post,get
+            datatype: "json",//请求数据返回的类型。可选json,xml,txt
+            height: '400',//高度，表格高度。可为数值、百分比或'auto'
+            width: 150,//这个宽度不能为百分比
+            colNames: ['权限组列表', '权限组编码'],//jqGrid的列显示名字
+            colModel: [ //jqGrid每一列的配置信息。包括名字，索引，宽度,对齐方式.....
+                {name: 'name', width: 100, sortable: false},
+                {name: 'code', hidedlg: true, hidden: true}
+            ],
+            rownumbers: false,//添加左侧行号
+            rowNum: 100,//一页显示多少条
+            sortname: 'sort',//初始化的时候排序的字段
+            sortorder: "asc",//排序方式,可选desc,asc
+            treeGrid: true,//启用树列表
+            gridview: true,
+            treeGridModel: "adjacency",
+            ExpandColumn: 'name',//设置树列表扩开列
+            multiselect: false,//是否多选
+            treeReader: { //树列表主要字段对照表
+                level_field: "level",
+                parent_id_field: "parent_id",
+                leaf_field: "is_leaf",
+                expanded_field: "expanded"
+            },
+            onSelectRow: function (ids) {
+                if (ids) {
+                    $("#list_positions").jqGrid('setGridParam', {
+                        url: "/api/system/positions/?department_id=" + ids,
+                        page: 1
+                    });
+                    var ret = $("#list").jqGrid('getRowData', ids);
+                    $("#list_positions").jqGrid('setCaption', "职位列表: " + ret.name).trigger('reloadGrid');
+                }
+            }
+        });
+
+        //创建jqGrid组件
+        $("#list_positions").jqGrid({
+            url: "/api/system/positions/",//组件创建完成之后请求数据的url
+            mtype: "get",//向后台请求数据的ajax的类型。可选post,get
+            datatype: "json",//请求数据返回的类型。可选json,xml,txt
+            height: 'auto',//高度，表格高度。可为数值、百分比或'auto'
+            //width:1000,//这个宽度不能为百分比
+            autowidth: true,//自动宽
+            colNames: ['职位名称', '所属权限组', '权限组编号'],//jqGrid的列显示名字
+            colModel: [ //jqGrid每一列的配置信息。包括名字，索引，宽度,对齐方式.....
+                {name: 'name', index: 'name', width: 100},
+                {name: 'department_name', index: 'department_name', width: 100},
+                {name: 'department_code', index: 'department_code', width: 100}
+            ],
+            rownumbers: false,//添加左侧行号
+            altRows: true,//设置为交替行表格,默认为false
+            rowNum: 20,//一页显示多少条
+            rowList: [20, 50, 100],//可供用户选择一页显示多少条
+            pager: '#pager_positions',//表格页脚的占位符(一般是div)的id
+            sortname: 'id',//初始化的时候排序的字段
+            sortorder: "asc",//排序方式,可选desc,asc
+            viewrecords: true,//是否在浏览导航栏显示记录总数
+            caption: "职位列表",//表格的标题名字
+            gridview: true
+        });
+        /*创建jqGrid的操作按钮容器*/
+        /*可以控制界面上增删改查的按钮是否显示*/
+        $("#list_positions").jqGrid('navGrid', '#pager_positions', {
+            edit: false,
+            add: false,
+            del: false,
+            search: false
+        });
+    });
+
+    /*添加*/
+    function add(title, url, w, h) {
+        var department_id = $("#list").jqGrid('getGridParam', 'selrow');
+        if (department_id) {
+            var ret = $("#list").jqGrid('getRowData', department_id);
+            layer_show(title, url + '?id=0&department_id=' + department_id + '&department_name=' + ret.name + '&department_code=' + ret.code, w, h);
+        }
+        else {
+            layer.msg('请选择要新增职位的权限组!', {icon: 1, time: 3000});
+        }
+    }
+    /*编辑*/
+    function edit(title, url, w, h) {
+        var department_id = $("#list").jqGrid('getGridParam', 'selrow');
+        if (department_id) {
+            var id = $("#list_positions").jqGrid('getGridParam', 'selrow');
+            if (id) {
+                layer_show(title, url + '?department_id=' + department_id + '&id=' + id, w, h);
+            }
+            else {
+                layer.msg('请选择要编辑的职位!', {icon: 1, time: 3000});
+            }
+        }
+        else {
+            layer.msg('请选择要编辑职位的权限组!', {icon: 1, time: 3000});
+        }
+    }
+    /*删除*/
+    function del() {
+        var id = $("#list_positions").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            layer.confirm('确认要删除吗？', function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/system/positions/" + id + "/",
+                    xhrFields: {withCredentials: true},
+                    data: {'_method': 'delete'},
+                    dataType: 'json',
+                    success: function (data) {
+                        if (checkLogin(data, false)) {
+                            $("#list_positions").jqGrid('delRowData', id);
+                            layer.msg('已删除!', {icon: 1, time: 3000});
+                            layer_close();
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg('删除失败!', {icon: 1, time: 3000});
+                        layer_close();
+                    }
+                });
+            });
+        }
+        else {
+            layer.msg('请选择要删除的行!', {icon: 1, time: 3000});
+        }
+    }
+</script>
+</body>
+</html>

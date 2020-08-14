@@ -1,0 +1,261 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <title>部门设置</title>
+</head>
+<body>
+<div class="page-container">
+    <form class="form form-horizontal" id="form1">
+        <div id="tab-category" class="HuiTab">
+            <div class="row cl">
+                <input type="hidden" id="id" value="">
+                <input type="hidden" id="app_id_tem" value="">
+                <label class="form-label col-xs-3 col-sm-2">上级部门：</label>
+                <div class="formControls col-xs-4 col-sm-5">
+                    <input id="itemSel" type="text" class="input-text" readonly value=""/>
+                </div>
+                <a id="selectBtn" href="#" onclick="showList(); return false;">选择</a>
+                <div id="listContent" class="listContent" style="z-index:9999; display:none; position: absolute;">
+                    <ul id="tree" class="ztree"
+                        style="margin-top:0; width:160px; background:#f0f6e4;border: 1px solid #617775;"></ul>
+                    <input type="hidden" id="tree_ok" value="">
+                    <input type="hidden" id="parent_id" value="">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">
+                    部门名称：
+                    <span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">部门编码：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="code" name="code" readonly>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">排序：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="sort" name="sort">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">是否最终节点：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="is_leaf_1" name="is_leaf" value="false">否
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="is_leaf_2" name="is_leaf" value="true">是
+                    </div>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-3">
+                <button onClick="save_submit();" class="btn btn-primary radius" type="button">
+                    &nbsp;&nbsp;提交&nbsp;&nbsp;
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<link rel="stylesheet" href="lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/zTree/v3/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="/lib/common.js"></script>
+<SCRIPT type="text/javascript">
+    <!--
+    var setting = {
+        view: {
+            dblClickExpand: false
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "id",
+                pIdKey: "parent_id"
+            }
+        },
+        callback: {
+            beforeClick: beforeClick,
+            onClick: onClick
+        }
+    };
+
+    function beforeClick(treeId, treeNode) {
+        return treeNode;
+    }
+
+    function onClick(e, treeId, treeNode) {
+        var zTree = $.fn.zTree.getZTreeObj("tree"), nodes = zTree.getSelectedNodes(), v = "";
+        var parent_id = 0;
+        nodes.sort(function compare(a, b) {
+            return a.id - b.id;
+        });
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            v += nodes[i].name + ",";
+            parent_id += nodes[i].id + ',';
+        }
+        if (v.length > 0) v = v.substring(0, v.length - 1);
+        if (parent_id.length > 0) parent_id = parent_id.substring(0, parent_id.length - 1);
+        //var itemObj = $("#itemSel");
+        //itemObj.attr("value", v);
+        $('#itemSel').val(v);
+        $('#parent_id').val(parent_id);
+    }
+
+    function showList() {
+        var itemOffset = $("#itemSel").offset();
+        $("#listContent").css({left: itemOffset.left + "px"}).slideDown("fast");
+
+        $("body").bind("mousedown", onBodyDown);
+    }
+    function hideMenu() {
+        $("#listContent").fadeOut("fast");
+        $("body").unbind("mousedown", onBodyDown);
+    }
+    function onBodyDown(event) {
+        if (!(event.target.id == "selectBtn" || event.target.id == "listContent" || $(event.target).parents("#listContent").length > 0)) {
+            hideMenu();
+        }
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: "/api/system/department/tree/",
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, false)) {
+                    $.fn.zTree.init($("#tree"), setting, data.data.tree_list);
+                    $("#tree_ok").val("ok");
+                    if ($("#parent_id").val() > 0) {
+                        var treeObj = $.fn.zTree.getZTreeObj("tree");
+                        var node = treeObj.getNodeByParam("id", $("#parent_id").val(), null);
+                        $('#itemSel').val(node.name);
+                    }
+                }
+            }
+        });
+    });
+
+    $(function () {
+        var id = getQueryString('id');
+        $('#id').val(id);
+
+        if (id) {
+            $.ajax({
+                url: "/api/system/department/" + id + "/",
+                type: "GET",
+                dataType: 'json',
+                success: function (data) {
+                    if (checkLogin(data, true)) {
+                        $('#selectBtn').hide();
+                        $("#name").val(data.data.name);
+                        $("#code").val(data.data.code);
+                        $("#parent_id").val(data.data.parent_id);
+                        $("#app_id_tem").val(data.data.app_id);
+                        $("#sort").val(data.data.sort);
+                        if (data.data.is_leaf) {
+                            $("#is_leaf_2").attr('checked', 'checked');
+                        }
+                        else {
+                            $("#is_leaf_1").attr('checked', 'checked');
+                        }
+                        if (data.data.parent_id > 0 && $("#tree_ok").val() == "ok") {
+                            var treeObj = $.fn.zTree.getZTreeObj("tree");
+                            var node = treeObj.getNodeByParam("id", data.data.parent_id, null);
+                            $('#itemSel').val(node.name);
+                        }
+                    }
+                }
+            });
+        }
+    });
+    function save_submit() {
+        var is_leaf = $("input[type='radio'][name='is_leaf']:checked").val();
+        data = {
+            'name': encodeURI($("#name").val()),
+            'code': $("#code").val(),
+            'app_id': $("#app_id").val(),
+            'parent_id': $("#parent_id").val(),
+            'sort': $("#sort").val(),
+            'is_leaf': is_leaf
+        };
+        var id = $('#id').val();
+        if (id) {
+            url = "/api/system/department/" + id + "/";
+            data['_method'] = 'put';
+        }
+        else {
+            url = "/api/system/department/";
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, true)) {
+                    layer.msg(data.msg, {icon: 1, time: 3000});
+                    setTimeout(function () {
+                        parent.jQuery("#list").trigger("reloadGrid");
+                        layer_close();
+                    }, 1000);
+                }
+            }
+        });
+    }
+    //-->
+</SCRIPT>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

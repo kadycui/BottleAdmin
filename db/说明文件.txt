@@ -1,0 +1,23 @@
+code文件夹是完整的项目代码
+html是项目前端代码
+
+
+---------------------------------------------
+simple_db.sql  是postgresql导出的数据库备份，需要创建一个空的simple_db数据库（如果库里已有相同的表存在，则会导入失败），然后使用下面的语句导入
+
+
+恢复数据库方法:
+windows恢复：
+cd C:\Program Files (x86)\PostgreSQL\9.4\bin\    进入pg安装目录下的bin文件夹
+psql.exe -h localhost -U postgres -p 5432 -d simple_db <  E:/simple_db.sql
+
+linux恢复:
+/usr/pgsql-9.6/bin/psql -h localhost -U postgres -p 5432 simple_db <  /tmp/simple_db.sql
+
+
+具体路径自己根据自己服务器进行修改
+恢复的命令使用方法大家可以自行百度
+
+---------------------------------------------
+
+

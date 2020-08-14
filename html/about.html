@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.min.css"/>
+    <!--[if lt IE 9]>
+    <link href="static/h-ui/css/H-ui.ie.css" rel="stylesheet" type="text/css"/>
+    <![endif]-->
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <style type="text/css">
+        .ui-sortable .panel-header {
+            cursor: move;
+        }
+    </style>
+    <title>公司介绍</title>
+    <meta name="keywords" content="关键词,5个左右,单个8汉字以内">
+    <meta name="description" content="网站描述，字数尽量空制在80个汉字，160个字符以内！">
+</head>
+<body>
+<div class="containBox">
+    <div class="containBox-bg"></div>
+    <div class="wap-container">
+        <div id="slider-3">
+            <div class="slider">
+                <div class="bd">
+                    <ul>
+                        <li><a href="http://www.h-ui.net/" target="_blank"><img src="temp/banner1.jpg"></a></li>
+                        <li>
+                            <a href="http://www.h-ui.net/zhaoshang.shtml" target="_blank"><img
+                                    src="temp/banner2.jpg"></a>
+                        </li>
+                        <li>
+                            <a href="http://h-ui.net/H-ui.admin.shtml" target="_blank"><img src="temp/banner3.jpg"></a>
+                        </li>
+                    </ul>
+                </div>
+                <ol class="hd cl dots">
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="breadcrumb">
+            <div class="container">
+                <i class="Hui-iconfont">&#xe67f;</i>
+                <a href="/" class="c-primary">首页</a>
+                <span class="c-gray en">-</span>
+                <a href="/about.html" class="c-primary">公司介绍</a>
+                <span class="c-gray en">-</span>
+                <a href="/products.html" class="c-primary">产品中心</a>
+                <span class="c-gray en">-</span>
+                <a href="/contact_us.html" class="c-primary">联系我们</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="wap-container">
+        <div class="container ui-sortable">
+            <div class="panel panel-default">
+                <div class="panel-header">公司介绍</div>
+                <div class="panel-body">
+                    <span id="content"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wap-container" style="clear:both;">
+        <footer class="footer mt-20">
+            <div class="container">
+                <nav class="footer-nav">
+                    <a href="/" class="c-primary">首页</a>
+                    <span class="c-gray en">-</span>
+                    <a href="/about.html" class="c-primary">公司介绍</a>
+                    <span class="c-gray en">-</span>
+                    <a href="/products.html" class="c-primary">产品中心</a>
+                    <span class="c-gray en">-</span>
+                    <a href="/contact_us.html" class="c-primary">联系我们</a>
+                </nav>
+                <p>地址：广州市天河区黄浦大道XX号 电话：4008-0000-00<br>
+                    CopyRight 2017, All Rights Reserved XXX食品有限公司 版权所有 粤ICP备00000000号
+                </p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery-ui/1.9.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="lib/jquery.SuperSlide/2.1.1/jquery.SuperSlide.min.js"></script>
+<script>
+    $(function () {
+        //幻灯片
+        jQuery("#slider-3 .slider").slide({
+            mainCell: ".bd ul",
+            titCell: ".hd li",
+            trigger: "click",
+            effect: "leftLoop",
+            autoPlay: true,
+            delayTime: 700,
+            interTime: 3000,
+            pnLoop: false,
+            titOnClassName: "active"
+        });
+    });
+    //读取服务器记录
+    $.ajax({
+        url: "/api/about/",
+        type: "GET",
+        dataType: 'json',
+        success: function (data) {
+            $("#content").html(data.data.content);
+        }
+    });
+</script>
+</body>
+</html>
+<!--H-ui前端框架提供前端技术支持 h-ui.net @2017-01-01 -->

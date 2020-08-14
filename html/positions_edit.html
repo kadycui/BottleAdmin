@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <title>职位设置</title>
+</head>
+<body>
+<div class="page-container">
+    <form class="form form-horizontal" id="form1">
+        <div id="tab-category" class="HuiTab">
+            <input type="hidden" id="id" value="">
+            <input type="hidden" id="department_id" value="">
+            <input type="hidden" id="page_power" value="">
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">
+                    职位名称：
+                    <span class="c-red">*</span></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">所属部门：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="department_name"
+                           name="department_name" readonly>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">部门编码：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="department_code"
+                           name="department_code" readonly>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-2">设置访问权限：</label>
+                <div class="formControls col-xs-4 col-sm-5">
+                    <ul id="tree" class="ztree" style="margin-top:0;"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-3">
+                <button onClick="save_submit();" class="btn btn-primary radius" type="button">
+                    &nbsp;&nbsp;提交&nbsp;&nbsp;
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<link rel="stylesheet" href="lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/zTree/v3/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="lib/zTree/v3/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="/lib/common.js"></script>
+<SCRIPT type="text/javascript">
+    <!--
+    var setting = {
+        view: {
+            dblClickExpand: false
+        },
+        check: {
+            enable: true,
+            chkboxType: {"Y": "ps", "N": "ps"}
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "id",
+                pIdKey: "parent_id"
+            }
+        },
+        callback: {
+            onCheck: onCheck
+        }
+    };
+
+    function onCheck(e, treeId, treeNode) {
+        var treeObj = $.fn.zTree.getZTreeObj("tree"),
+                nodes = treeObj.getCheckedNodes(true),
+                v = ",";
+        for (var i = 0; i < nodes.length; i++) {
+            v += nodes[i].id + ",";//获取选中节点的值
+        }
+        $('#page_power').val(v)
+    }
+
+    $(document).ready(function () {
+        var id = getQueryString('id');
+        if (id == null || id == '') {
+            id = 0;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: "/api/system/menu_info/positions/" + id + "/",
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, false)) {
+                    $.fn.zTree.init($("#tree"), setting, data.data.tree_list);
+                }
+            }
+        });
+    });
+
+    $(function () {
+        var department_id = getQueryString('department_id');
+        $('#department_id').val(department_id);
+        var id = getQueryString('id');
+        $('#id').val(id);
+        if (id == 0) {
+            var department_name = getQueryString('department_name');
+            department_name = decodeURI(department_name);
+            $('#department_name').val(department_name);
+            $('#department_code').val(getQueryString('department_code'));
+        }
+
+        if (id > 0) {
+            $.ajax({
+                url: "/api/system/positions/" + id + "/",
+                type: "GET",
+                data: {'department_id': department_id},
+                dataType: 'json',
+                success: function (data) {
+                    if (checkLogin(data, true)) {
+                        $('#selectBtn').hide();
+                        $("#name").val(data.data.name);
+                        $("#department_code").val(data.data.department_code);
+                        $("#department_name").val(data.data.department_name);
+                    }
+                }
+            });
+        }
+    });
+    function save_submit() {
+        var is_manager = 0;
+        if ($("input[type='radio'][name='is_manager']:checked").val() == 'true') {
+            is_manager = 1;
+        }
+        data = {
+            'name': encodeURI($("#name").val()),
+            'department_id': $("#department_id").val(),
+            'is_manager': is_manager,
+            'page_power': $("#page_power").val()
+        };
+        var id = $('#id').val();
+        if (id > 0) {
+            url = "/api/system/positions/" + id + "/";
+            data['_method'] = 'put';
+        }
+        else {
+            url = "/api/system/positions/";
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, true)) {
+                    layer.msg(data.msg, {icon: 1, time: 3000});
+                    setTimeout(function () {
+                        parent.jQuery("#list_positions").trigger("reloadGrid");
+                        layer_close();
+                    }, 1000);
+                }
+            }
+        });
+    }
+    //-->
+</SCRIPT>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

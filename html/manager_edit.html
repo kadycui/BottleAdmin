@@ -1,0 +1,413 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>管理员设置</title>
+</head>
+<body>
+<article class="page-container">
+    <form class="form form-horizontal" id="form1">
+        <div id="tab-category" class="HuiTab">
+            <div class="tabBar cl">
+                <span>基本设置</span>
+                <span>个人权限绑定</span>
+                <span>账户安全</span>
+            </div>
+            <div class="tabCon">
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">管理员姓名：<span class="c-red">*</span></label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">性别：</label>
+                    <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                        <div class="radio-box">
+                            <input type="radio" id="sex_1" name="sex" value="男" checked>男
+                        </div>
+                        <div class="radio-box">
+                            <input type="radio" id="sex_2" name="sex" value="女">女
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">手机号码：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">出生日期：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" onfocus="WdatePicker({ maxDate:'#F{\'%y-%M-%d\'}' })" id="birthday"
+                               class="input-text Wdate" style="width:120px;">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">Email：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="email" name="email">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">备注：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <textarea id="remark" name="remark" cols="" rows="" class="textarea"
+                                  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！"
+                                  onKeyUp="$.Huitextarealength(this,100)"></textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tabCon">
+                <div class="row cl">
+                    <input type="hidden" id="id" value="">
+                    <label class="form-label col-xs-3 col-sm-2">所属部门：<span class="c-red">*</span></label>
+                    <div class="formControls col-xs-4 col-sm-5">
+                        <input id="itemSel" type="text" class="input-text" readonly value=""/>
+                    </div>
+                    <a id="selectBtn" href="#" onclick="showList(); return false;">选择</a>
+                    <div id="listContent" class="listContent" style="z-index:9999; display:none; position: absolute;">
+                        <ul id="tree" class="ztree"
+                            style="margin-top:0; width:160px; background:#f0f6e4;border: 1px solid #617775;"></ul>
+                        <input type="hidden" id="department_id" value="">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">所属职位：<span class="c-red">*</span></label>
+                    <div class="formControls col-xs-4 col-sm-5">
+                        <select name="positions" class="input-text" id="positions" style="width: 100%"></select>
+
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">状态：</label>
+                    <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                        <div class="radio-box">
+                            <input type="radio" id="is_work_1" name="is_work" value="false">已离职
+                        </div>
+                        <div class="radio-box">
+                            <input type="radio" id="is_work_2" name="is_work" value="true" checked>工作中
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">是否启用：</label>
+                    <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                        <div class="radio-box">
+                            <input type="radio" id="is_enabled_1" name="is_enabled" value="false">否
+                        </div>
+                        <div class="radio-box">
+                            <input type="radio" id="is_enabled_2" name="is_enabled" value="true" checked>是
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tabCon">
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2">登录帐号：<span class="c-red">*</span></label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="login_name" name="login_name">
+                    </div>
+                </div>
+                <div class="row cl" id="modify_password">
+                    <label class="form-label col-xs-3 col-sm-2" id="new_password">新密码：<span
+                            class="c-red">*</span></label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="password" class="input-text" value="" placeholder="" id="login_password1"
+                               name="login_password1">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-2" id="confirm_password">确认密码：<span class="c-red">*</span></label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="password" class="input-text" value="" placeholder="" id="login_password2"
+                               name="login_password2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-3">
+                <button onClick="save_submit();" class="btn btn-primary radius" type="button">
+                    &nbsp;&nbsp;提交&nbsp;&nbsp;
+                </button>
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<link rel="stylesheet" href="lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/zTree/v3/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="/lib/common.js"></script>
+<SCRIPT type="text/javascript">
+
+    $.Huitab("#tab-category .tabBar span", "#tab-category .tabCon", "current", "click", "0");
+
+    var setting = {
+        view: {
+            dblClickExpand: false
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "id",
+                pIdKey: "parent_id"
+            }
+        },
+        callback: {
+            beforeClick: beforeClick,
+            onClick: onClick
+        }
+    };
+
+    function beforeClick(treeId, treeNode) {
+        return treeNode;
+    }
+
+    function onClick(e, treeId, treeNode) {
+        var zTree = $.fn.zTree.getZTreeObj("tree"), nodes = zTree.getSelectedNodes(), v = "";
+        var department_id = 0;
+        nodes.sort(function compare(a, b) {
+            return a.id - b.id;
+        });
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            v += nodes[i].name + ",";
+            department_id += nodes[i].id + ',';
+        }
+        if (v.length > 0) v = v.substring(0, v.length - 1);
+        if (department_id.length > 0) department_id = department_id.substring(0, department_id.length - 1);
+        //var itemObj = $("#itemSel");
+        //itemObj.attr("value", v);
+        hideMenu();
+        $("#positions").empty();
+        $('#itemSel').val(v);
+        $('#department_id').val(department_id);
+        addItems(department_id, 0);
+    }
+
+    function showList() {
+        var itemOffset = $("#itemSel").offset();
+        $("#listContent").css({left: itemOffset.left + "px"}).slideDown("fast");
+
+        $("body").bind("mousedown", onBodyDown);
+    }
+    function hideMenu() {
+        $("#listContent").fadeOut("fast");
+        $("body").unbind("mousedown", onBodyDown);
+    }
+    function onBodyDown(event) {
+        if (!(event.target.id == "selectBtn" || event.target.id == "listContent" || $(event.target).parents("#listContent").length > 0)) {
+            hideMenu();
+        }
+    }
+    //动态绑定下拉框项
+    function addItems(id, select_id) {
+        $.ajax({
+            url: "/api/system/positions/?sidx=id&sord=desc&department_id=" + id,
+            type: "GET",
+            dataType: 'json',
+            success: function (data) {
+                if (data && data.rows) {
+                    var optionstring = "<option value=''>请选择...</option>";
+                    for (var i in data.rows) {
+                        var jsonObj = data.rows[i];
+                        optionstring += "<option value=\"" + jsonObj.id + "\" >" + jsonObj.name + "</option>";
+                    }
+                    $("#positions").append(optionstring);
+                    $("#positions").val(select_id);
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: "/api/system/department/tree/",
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, false)) {
+                    $.fn.zTree.init($("#tree"), setting, data.data.tree_list);
+                }
+            }
+        });
+    });
+
+    // 读取数据度设置到表单中
+    $(function () {
+        var id = getQueryString('id');
+        $('#id').val(id);
+
+        if (id) {
+            $.ajax({
+                url: "/api/system/manager/" + id + "/",
+                type: "GET",
+                dataType: 'json',
+                success: function (data) {
+                    if (checkLogin(data, true)) {
+                        $("#name").val(data.data.name);
+                        if (data.data.sex == '男') {
+                            $("#sex_1").attr('checked', true);
+                        }
+                        else {
+                            $("#sex_2").attr('checked', true);
+                        }
+                        $("#mobile").val(data.data.mobile);
+                        $("#birthday").val(data.data.birthday);
+                        $("#email").val(data.data.email);
+                        $("#remark").val(data.data.remark);
+                        $("#login_name").val(data.data.login_name);
+                        $("#login_name").attr("readonly", "readonly");
+                        $("#department_id").val(data.data.department_id);
+                        addItems(data.data.department_id, data.data.positions_id);
+                        if (data.data.is_work) {
+                            $("#is_work_2").attr('checked', true);
+                        }
+                        else {
+                            $("#is_work_1").attr('checked', true);
+                        }
+                        if (data.data.is_enabled) {
+                            $("#is_enabled_2").attr('checked', true);
+                        }
+                        else {
+                            $("#is_enabled_1").attr('checked', true);
+                        }
+                        if (data.data.department_id > 0) {
+                            var treeObj = $.fn.zTree.getZTreeObj("tree");
+                            var node = treeObj.getNodeByParam("id", data.data.department_id, null);
+                            $('#itemSel').val(node.name);
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+    function save_submit() {
+        if (!$("#name").val()) {
+            layer.msg('管理员性名为必填项，不能为空', {icon: 1, time: 3000});
+            return false;
+        }
+        if (!$("#login_name").val()) {
+            layer.msg('登录账号为必填项，不能为空', {icon: 1, time: 3000});
+            return false;
+        }
+        if (!$("#department_id").val()) {
+            layer.msg('所属部门为必选项，不能为空', {icon: 1, time: 3000});
+            return false;
+        }
+        if (!$("#positions").val()) {
+            layer.msg('所属职位为必选项，不能为空', {icon: 1, time: 3000});
+            return false;
+        }
+        var sex = '女';
+        if ($("input[type='radio'][name='sex']:checked").val() == '男') {
+            sex = '男';
+        }
+        var is_work = $("input[type='radio'][name='is_work']:checked").val();
+        var is_enabled = $("input[type='radio'][name='is_enabled']:checked").val();
+        data = {
+            'name': encodeURI($("#name").val()),
+            'sex': encodeURI(sex),
+            'mobile': $("#mobile").val(),
+            'birthday': $("#birthday").val(),
+            'email': $("#email").val(),
+            'remark': $("#remark").val(),
+            'login_name': $("#login_name").val(),
+            'department_id': $("#department_id").val(),
+            'positions_id': $("#positions").val(),
+            'is_work': is_work,
+            'is_enabled': is_enabled
+        };
+
+        var id = $('#id').val();
+        if (id) {
+            login_password1 = $('#login_password1').val();
+            if (login_password1.length > 0) {
+                if (login_password1.length < 6) {
+                    layer.msg('新密码长度必须大于等于6位', {icon: 1, time: 3000});
+                    return false;
+                }
+                if (login_password1 != $('#login_password2').val()) {
+                    layer.msg('新密码与确认密码不一致', {icon: 1, time: 3000});
+                    return false;
+                }
+                data['login_password1'] = login_password1;
+            }
+            url = "/api/system/manager/" + id + "/";
+            data['_method'] = 'put';
+        }
+        else {
+            login_password1 = $('#login_password1').val();
+            if (!login_password1) {
+                layer.msg('请填写登录密码', {icon: 1, time: 3000});
+                return false;
+            }
+            if (login_password1.length < 6) {
+                layer.msg('登录密码长度必须大于等于6位', {icon: 1, time: 3000});
+                return false;
+            }
+            if (login_password1 != $('#login_password2').val()) {
+                layer.msg('两次输入的密码不一致', {icon: 1, time: 3000});
+                return false;
+            }
+            data['login_password1'] = login_password1;
+            url = "/api/system/manager/";
+        }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                if (checkLogin(data, true)) {
+                    layer.msg(data.msg, {icon: 1, time: 3000});
+                    setTimeout(function () {
+                        parent.jQuery("#list").trigger("reloadGrid");
+                        layer_close();
+                    }, 1000);
+                }
+            }
+        });
+    }
+</SCRIPT>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
